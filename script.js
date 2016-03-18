@@ -16,17 +16,13 @@
   Slider.prototype.init = function (shift) {
     this.__slides[this.__currentSlide].classList.add('active');
 
-    this.__main.addEventListener('click', this.onMainClick.bind(this, [shift]), false);  //click on the slide
+    this.__main.addEventListener('click', this.onMainClick.bind(this, shift), false);  //click on the slide
 
     if(this.__pagination !== null) {
-      for (var i = 0; i < this.__pagination.children.length; i++) { //click on each of the pagination buttons
-        this.__pagination.children[i].addEventListener('click', this.onPaginationClick.bind(this, [this.__pagination.children[i].dataset.slider__item, shift]), false); //here we give index of clicked button and shift value
-      }
+      this.__pagination.addEventListener('click', this.onPaginationClick.bind(this, shift), true);
     }
     if(this.__controlButtons !== null) {
-      for (var i = 0; i < this.__controlButtons.children.length; i++) { //click on Prev/Next buttons
-        this.__controlButtons.children[i].addEventListener('click', this.onControlButtonClick.bind(this, [this.__controlButtons.children[i].getAttribute('id'), shift]), false);
-      }
+      this.__controlButtons.addEventListener('click', this.onControlButtonClick.bind(this, shift), true);
     }
 
     if(this.__direction == 'vertical') {
@@ -66,14 +62,17 @@
       this.__controlButtons.children[0].removeAttribute('disabled');
     }
 
-    for(var i = 0; i < this.__pagination.children.length; i++) {
-      this.__pagination.children[i].style.removeProperty('background');
+    if(this.__pagination !== null) {
+      for (var i = 0; i < this.__pagination.children.length; i++) {
+        this.__pagination.children[i].style.removeProperty('background');
+      }
+
+      this.__pagination.children[this.__currentSlide].style.background = 'red';
     }
-    this.__pagination.children[this.__currentSlide].style.background = 'red';
   }
 
   Slider.prototype.onMainClick = function (shft) {
-    var shift = shft[0];
+    var shift = shft;
     var length = this.__itemsAmount;
     length--;
 
@@ -86,20 +85,16 @@
     else {
       this.__currentShift += shift;
       this.__currentSlide++;
-      for (var i = 0; i < this.__itemsAmount; i++) { //prob. stupid solution for removing all active classes but it works
-        this.__slides[i].classList.remove('active');
-      }
-
       this.__slides[this.__currentSlide].classList.add('active');
+      this.__main.querySelector('.active').classList.remove('active');
     }
-
     this.render();
   }
 
-  Slider.prototype.onPaginationClick = function () {
-    var args = arguments[0];
-    var index = args[0];
-    var shift = args[1];
+  Slider.prototype.onPaginationClick = function (e, shift) {
+    var args = [].slice.call(arguments);
+    var shift = args[0];
+    var index = args[1].target.dataset.slider__item;
 
     index--;
 
@@ -113,10 +108,10 @@
     this.render();
   };
 
-  Slider.prototype.onControlButtonClick = function () {
-    var args = arguments[0];
-    var type = args[0];
-    var shift = args[1];
+  Slider.prototype.onControlButtonClick = function (e, shift) {
+    var args = [].slice.call(arguments);
+    var shift = args[0];
+    var type = args[1].target.getAttribute('id');
     var length = this.__itemsAmount;
     var prevSlide = this.__currentSlide;
     var nextSlide = this.__currentSlide;
