@@ -19,9 +19,29 @@
     this.__main.addEventListener('click', this.onMainClick.bind(this, shift), false);  //click on the slide
 
     if(this.__pagination !== null) {
+      var elem;
+      for(var i = 0; i < this.__itemsAmount; i++) {
+        elem = document.createElement('input');
+        elem.setAttribute('type', 'button');
+        elem.setAttribute('data-slider__item', (i + 1).toString());
+        elem.setAttribute('value', (i + 1).toString());
+        this.__pagination.appendChild(elem);
+      }
       this.__pagination.addEventListener('click', this.onPaginationClick.bind(this, shift), true);
     }
-    if(this.__controlButtons !== null) {
+    if(this.__controlButtons !== null) { //<input type="button" id="control-button__next" value="Next">-->
+      var next = document.createElement('input');
+      var prev = document.createElement('input');
+
+      next.setAttribute('type', 'button');
+      next.setAttribute('id', 'control-button__next');
+      next.setAttribute('value', 'Next');
+      prev.setAttribute('type', 'button');
+      prev.setAttribute('id', 'control-button__prev');
+      prev.setAttribute('value', 'Prev');
+
+      this.__controlButtons.appendChild(prev);
+      this.__controlButtons.appendChild(next);
       this.__controlButtons.addEventListener('click', this.onControlButtonClick.bind(this, shift), true);
     }
 
@@ -48,18 +68,20 @@
     for(var i = 0; i < this.__itemsAmount; i++) {
       this.__slides[i].style[this.__direction] = this.__currentShift + 'px';
     }
-    if(this.__controlButtons !== null && this.__currentSlide == length) { //if settings for controlButtons were set, we can enable or disable it
-      this.__controlButtons.children[1].setAttribute('disabled', 'true');
-    }
-    else if (this.__controlButtons !== null && this.__currentSlide !== length) {
-      this.__controlButtons.children[1].removeAttribute('disabled');
-    }
+    if(this.__controlButtons !== null) {  //if settings for controlButtons were set, we can enable or disable it
+      if(this.__currentSlide == length) {
+        this.__controlButtons.children[1].setAttribute('disabled', 'true');
+      }
+      else {
+        this.__controlButtons.children[1].removeAttribute('disabled');
+      }
 
-    if(this.__controlButtons !== null && this.__currentSlide == 0) {
-      this.__controlButtons.children[0].setAttribute('disabled', 'true');
-    }
-    else if(this.__controlButtons !== null && this.__currentSlide !== 0) {
-      this.__controlButtons.children[0].removeAttribute('disabled');
+      if(this.__currentSlide == 0) {
+        this.__controlButtons.children[0].setAttribute('disabled', 'true');
+      }
+      else {
+        this.__controlButtons.children[0].removeAttribute('disabled');
+      }
     }
 
     if(this.__pagination !== null) {
