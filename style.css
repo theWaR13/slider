@@ -1,0 +1,36 @@
+.main {
+  position: relative;
+  
+  width: 445px;
+  height: 445px;
+
+  background: #eeeeee;
+
+  overflow: hidden;
+}
+
+.item {
+  position: relative;
+  margin-left: -4px;
+  margin-top: -4px;
+
+  display: inline-block;
+  width: 450px;
+  height: 450px;
+}
+
+.item1 {
+  background: #ff0000;
+}
+
+.item2 {
+  background: #00ff00;
+}
+
+.item3 {
+  background: #0000ff;
+}
+
+.item4 {
+  background: #000000;
+}
